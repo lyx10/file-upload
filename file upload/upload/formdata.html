@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+  <input type="text" id="username" />
+  <input type="text" id="password" />
+  <input type="submit" id="submitBtn" value="提交" />
+
+	<script type="text/javascript">
+    var oUsername = document.getElementById('username'),
+        oPassword = document.getElementById('password'),
+        oSubmitBtn = document.getElementById('submitBtn'),
+        fd = new FormData();
+
+    oSubmitBtn.onclick = function(){
+      fd.append('username', oUsername.value);
+      fd.append('password', oPassword.value);
+
+      console.log(fd); //打印结果是一个对象，里面只有__proto__
+
+      // 要访问添加的键名的值，用get方法
+      console.log(fd.get("username"));
+
+      // 修改值
+      fd.set("username", 'lili');
+      console.log(fd.get("username"));  //lili
+
+      // 查询是否有某个属性
+      console.log(fd.has("username"));  //true
+
+      // 删除
+      fd.delete("username");
+      fd.delete("password");
+
+      // 删除后查询
+      console.log(fd.get("username"));
+      console.log(fd.get("password"));  //结果是null
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// var oUsername = document.getElementById('username'),
+		//     oPassword = document.getElementById('password'),
+		//     oSubmitBtn = document.getElementById('submitBtn'),
+		//     fd = new FormData();
+
+		// oSubmitBtn.onclick = function(){
+    //   fd.append('Username', oUsername.value);
+    //   fd.append('Password', oPassword.value);
+
+    //   console.log('username:' + fd.get('Username'));
+    //   console.log('password:' + fd.get('Password'));
+
+    //   fd.set('Username', '李四');
+    //   console.log('username:' + fd.get('Username'));
+
+    //   console.log(fd.has('Password'));
+
+    //   fd.delete('Username');
+    //   console.log('username:' + fd.get('Username'));
+		// }
+	</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+[ 2022-12-06T13:54:52+08:00 ] ::1 /api_for_study/index.php/User/checkAuth
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000061s ]
+INFO: [ app_init ] --END-- [ RunTime:0.214170s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.092237s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.092615s ]
+NOTIC: [8] Undefined offset: 1 G:\Wampserver\wamp\www\api_for_study\Home\Controller\UserController.class.php 第 41 行.
+SQL: SHOW COLUMNS FROM `js_users` [ RunTime:0.5203s ]
+SQL: SELECT * FROM `js_users` WHERE `ident_code` = 'undefined' AND `token` = null LIMIT 1   [ RunTime:0.1032s ]
+NOTIC: [8] Use of undefined constant error_code - assumed 'error_code' G:\Wampserver\wamp\www\api_for_study\Home\Model\UsersModel.class.php 第 90 行.
+NOTIC: [8] Use of undefined constant error_msg - assumed 'error_msg' G:\Wampserver\wamp\www\api_for_study\Home\Model\UsersModel.class.php 第 91 行.
+
+[ 2022-12-06T13:55:19+08:00 ] ::1 /api_for_study/index.php/User/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000521s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000922s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001017s ]
+SQL: SHOW COLUMNS FROM `js_users` [ RunTime:0.0470s ]
+NOTIC: [8] Undefined variable: salt G:\Wampserver\wamp\www\api_for_study\Home\Model\UsersModel.class.php 第 7 行.
+SQL: SELECT * FROM `js_users` WHERE `username` = 'superatc' LIMIT 1   [ RunTime:0.0274s ]
+SQL: SELECT `password` FROM `js_users` WHERE `username` = 'superatc' LIMIT 1   [ RunTime:0.0005s ]
+NOTIC: [8] Use of undefined constant error_code - assumed 'error_code' G:\Wampserver\wamp\www\api_for_study\Home\Model\UsersModel.class.php 第 18 行.
+NOTIC: [8] Use of undefined constant error_msg - assumed 'error_msg' G:\Wampserver\wamp\www\api_for_study\Home\Model\UsersModel.class.php 第 19 行.
+

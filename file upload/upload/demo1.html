@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文件上传小蛋糕</title>
+  <style type="text/css">
+    ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .wrap{
+      margin-top: 100px;
+    }
+
+    .wrap .progress-bar{
+      width: 300px;
+      height: 26px;
+      margin-bottom: 18px;
+      text-align: center;
+      border: 1px solid #999;
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .progress-bar .progress{
+      width: 0;
+      height: 100%;
+      background-color: rgb(27, 146, 27);
+    }
+
+    .progress-bar .error-info{
+      line-height: 26px;
+      font-size: 14px;
+      color: #F00;
+    }
+
+    .error-tip{
+      color: #F00;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+  <input type="file" id="file"  multiple/>
+  <span class="error-tip j_errorTip"></span>
+
+  <div class="wrap">
+    <ul class="progress-wrap">
+
+    </ul>
+  </div>
+
+  <script type="text/javascript">
+    var oFile = document.getElementById("file"),
+        oErrorTip = document.getElementsByClassName("j_errorTip")[0],
+        oProgressWrap = document.getElementsByClassName('progress-wrap')[0];
+
+        oFile.addEventListener('change', upLoadFile, false);
+
+        function upLoadFile(){
+          var files = this.files,
+              fileLen = files.length;
+              
+          if(fileLen <= 0){
+            oErrorTip.textContent = '您还没有选择文件';
+            return;
+          }
+
+          if(fileLen > 5){
+            oErrorTip.textContent = '最多可同时上传5个文件';
+            return;
+          }
+
+          oErrorTip.textContent = '';
+
+          // 循环files
+          var fileName = '',
+              fileSize = 0,
+              errorInfo = '',
+              maxSize = 1024 * 1024 * 100,
+              fd = null,
+              item;
+
+          for(var i = 0; i < fileLen; i++){
+            item = files[i];
+            fileName = item.name;
+            fileSize = item.size;
+
+            // /\.(gif|jpg|jpeg|png)$/
+            if(!/\.(mp4)$/.test(fileName)){
+              errorInfo = '【' + fileName +  '】文件不是mp4类型';
+              return;
+            }
+
+            if(fileSize > maxSize){
+              errorInfo = '【' + fileName +  '】超过可上传大小';
+              return;
+            }
+
+            var oProgressBar = document.createElement('li');
+            oProgressBar.className = 'progress-bar';
+            oProgressWrap.appendChild(oProgressBar);
+
+            if(errorInfo){
+              oProgressBar.innerHTML = '<span class="error-info">' + errorInfo +'</span>';
+            }else{
+              oProgressBar.innerHTML = '<div class="progress"></div>';
+
+              fd = new FormData();
+              fd.append('file', item);
+
+              var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+              xhr.open('post', 'server/upload.php');
+              
+              (function(i){
+                xhr.upload.onprogress = function(event){
+                var e = event || window.event,
+                    thisProgressBar = oProgressWrap.getElementsByClassName('progress-bar')[i];
+                    oBar = thisProgressBar.getElementsByClassName('progress')[0],
+                    percent = e.loaded / e.total * 100 + '%';
+
+                    // console.log(oBar);
+                    oBar.style.width = percent;
+                }
+              })(i);
+
+              xhr.send(fd);
+            }
+          }
+        }
+  </script>
+  
+</body>
+</html>

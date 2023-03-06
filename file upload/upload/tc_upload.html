@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>腾讯课堂文件上传</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="upload-mod-wrap js-upload-mod">
+      <div class="upload-errorTip js-error-tip">
+        <i class="fa fa-exclamation-triangle"></i>
+        <span class="js-error-text"></span>
+      </div>
+      <div class= "upload-mod">
+        <div class="mod-hd">
+          <a href="javascript:;" class='fa fa-times js-close-mod-btn'></a>
+        </div>
+        <div class="upload-ctn">
+          <div class="upload-area js-upload-area btn">
+            <div class="upload-info">
+              <span class="percent js-percent">0.0%</span>
+              <span class="upload-success">
+                <i class="fa fa-check-circle"></i>
+                上传成功
+              </span>
+            </div>
+            <div class="progress-bar js-progress-bar"></div>
+            <div class="upload-input">
+              <label for="js-video-file" class="input-label"></label>
+              <input type="file" id="js-video-file" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+    <a href="javascript:;" class="js-open-mod-btn">上传视频</a>
+
+    <script type="text/javascript">
+      (function(doc){
+        var oOpenModBtn = doc.getElementsByClassName('js-open-mod-btn')[0],
+            oCloseModBtn = doc.getElementsByClassName('js-close-mod-btn')[0],
+            oErrorTip = doc.getElementsByClassName('js-error-tip')[0],
+            oErrorTxt = doc.getElementsByClassName('js-error-text')[0],
+            oUploadMod = doc.getElementsByClassName('js-upload-mod')[0],
+            oUploadArea = doc.getElementsByClassName('js-upload-area')[0],
+            oProgressBar = doc.getElementsByClassName('js-progress-bar')[0],
+            oPrecent = doc.getElementsByClassName('js-percent')[0],
+            oInput = doc.getElementById('js-video-file'),
+            maxSize = 1024 * 1204 * 15,
+            t = null;
+
+        var init = function(){
+          bindEvent();
+        }
+
+        function bindEvent(){
+          oOpenModBtn.addEventListener('click', openUploadMod.bind(this, true), false);
+          oCloseModBtn.addEventListener('click', openUploadMod.bind(this, false), false);
+          oInput.addEventListener('change', uploadFile, false);
+        }
+
+        function openUploadMod(show){
+          if(show){
+            oUploadMod.className += ' show';
+          }else{
+            oUploadMod.className = 'upload-mod-wrap js-upload-mod';
+          }
+        }
+
+        function uploadFile(){
+          var oFile = this.files[0],
+              fileLen = oFile.length,
+              fileName = oFile.name,
+              fileSize = oFile.size;
+
+          if(fileLen > 1){
+            setErrorTip('一次只能上传一个文件');
+            return;
+          }
+
+          if(!/\.(mp4)$/.test(fileName)){
+            setErrorTip('文件格式不是MP4格式');
+            return;
+          }
+
+          if(fileSize > maxSize){
+            setErrorTip('文件超过最大文件大小');
+            return;
+          }
+
+          doUpload(oFile);
+        }
+
+        function setErrorTip(text){
+          clearTimeout(t);
+          oErrorTxt.textContent = text;
+          oErrorTip.className += ' show';
+          t = setTimeout(function(){
+            oErrorTxt.textContent = '';
+            oErrorTip.className = 'upload-errorTip js-error-tip';
+            clearTimeout(t);
+            t = null;
+          }, 1500);
+        }
+
+        function doUpload(file){
+          var fd = new FormData(),
+              xhr = null;
+          fd.append('file', file);
+
+          // 实例化xhr对象
+          xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+          xhr.open('post', 'server/upload.php');
+
+          // btn 改为 uploading，背景图片切换， input隐藏
+          oUploadArea.className = 'upload-area js-upload-area uploading';
+
+          // 获取进度
+          xhr.upload.onprogress = function(event){
+            var e = event || window.event;
+            // 画进度条
+            oProgressBar.style.width = e.loaded / e.total * 100 + '%';
+            // 显示百分比
+            oPrecent.textContent = (e.loaded / e.total * 100).toFixed(1) + '%';
+          }
+
+          // 上传完成
+          xhr.upload.onload = function(){
+            oUploadArea.className += ' finished';
+            oPrecent.textContent = '0.0%';
+          }
+
+          xhr.send(fd);
+        }
+
+        init();
+
+      })(document);
+    </script>
+
+  </body>
+</html>
